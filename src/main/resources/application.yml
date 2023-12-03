@@ -1,0 +1,10 @@
+#spring:
+#  datasource:
+#    username: root
+#    password: Hyderabad007
+#    url: jdbc:mysql://localhost:3306/employees_db
+#    driver-class-name: com.mysql.cj.jdbc.Drive
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true

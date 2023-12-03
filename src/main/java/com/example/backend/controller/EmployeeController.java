@@ -1,12 +1,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.Employee;
-import com.example.backend.repository.EmployeeRepository;
+import com.example.backend.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,10 +15,35 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
+
+    @PostMapping("/employees")
+    public ResponseEntity<String> addEmployee(@RequestBody Employee employee) {
+        String status = employeeService.upsert(employee);
+        return new ResponseEntity<>(status, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/employees/{eid}")
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long eid) {
+        Employee employee = employeeService.getById(eid);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
 
     @GetMapping("/employees")
-    public List<Employee> fetchEmployees() {
-        return employeeRepository.findAll();
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> allEmployees= employeeService.getAllEmployees();
+        return new ResponseEntity<>(allEmployees, HttpStatus.OK);
+    }
+
+    @PutMapping("/employees")
+    public ResponseEntity<String> updateEmployee(@RequestBody Employee employee) {
+        String status = employeeService.upsert(employee);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/employees/{eid}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable Long eid) {
+        String status = employeeService.deleteById(eid);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 }
